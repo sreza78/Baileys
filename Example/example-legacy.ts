@@ -1,6 +1,7 @@
 import { Boom } from '@hapi/boom'
 import { AnyMessageContent, delay, DisconnectReason, fetchLatestBaileysVersion, makeInMemoryStore, makeWALegacySocket, useSingleFileLegacyAuthState } from '../src'
 import MAIN_LOGGER from '../src/Utils/logger'
+import * as fs from 'fs';
 
 const logger = MAIN_LOGGER.child({ })
 logger.level = 'debug'
@@ -67,6 +68,8 @@ const startSock = async() => {
 			if((lastDisconnect.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut) {
 				startSock()
 			} else {
+				// delete auth file
+				fs.unlinkSync('./auth_info.json')
 				console.log('connection closed')
 			}
 		}
